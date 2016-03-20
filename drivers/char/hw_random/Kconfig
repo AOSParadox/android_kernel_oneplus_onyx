@@ -4,7 +4,7 @@
 
 config HW_RANDOM
 	tristate "Hardware Random Number Generator Core support"
-	default m
+	default y
 	---help---
 	  Hardware Random Number Generator Core infrastructure.
 
@@ -256,7 +256,7 @@ config HW_RANDOM_MSM
 	depends on HW_RANDOM && ARCH_MSM
 	select CRYPTO_AES
 	select CRYPTO_ECB
-	default n
+	default y
 	---help---
 	  This driver provides kernel-side support for the Random Number
 	  Generator hardware found on Qualcomm MSM SoCs.
