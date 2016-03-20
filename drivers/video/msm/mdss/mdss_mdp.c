@@ -58,7 +58,7 @@
 #include "mdss_debug.h"
 
 #define CREATE_TRACE_POINTS
-#include "mdss_mdp_trace.h"
+#include <trace/mdss_mdp_trace.h>
 
 #define AUTOSUSPEND_TIMEOUT_MS	200
 
