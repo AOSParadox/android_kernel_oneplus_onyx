@@ -618,7 +618,6 @@ static int synaptics_tpd_button_init(struct synaptics_ts_data *ts)
 		return ret;
 }
 
-static int Dot_report_down = 0;
 static void tpd_down(struct synaptics_ts_data *ts,int raw_x, int raw_y, int x, int y, int p)
 {
     if( ts && ts->input_dev ){
@@ -628,30 +627,15 @@ static void tpd_down(struct synaptics_ts_data *ts,int raw_x, int raw_y, int x, i
         input_report_abs(ts->input_dev, ABS_MT_WIDTH_MAJOR, (raw_x+raw_y)/2);
         input_report_abs(ts->input_dev, ABS_MT_POSITION_X, x);
         input_report_abs(ts->input_dev, ABS_MT_POSITION_Y, y);
-		if( Dot_report_down == 150 ){
-			TPD_ERR("Synaptics:Down[%4d %4d %4d]\n", x, y, p);
-			Dot_report_down = 0;
-		}else{
-			Dot_report_down++;
-		}
 #ifndef TYPE_B_PROTOCOL
         input_mt_sync(ts->input_dev);
 #endif
     }
 }
 
-
-
-static int Dot_report_up = 0;
 static void tpd_up(struct synaptics_ts_data *ts, int raw_x, int raw_y, int x, int y, int p) {
 	if( ts && ts->input_dev ){
 		input_report_key(ts->input_dev, BTN_TOUCH, 0);
-		if( Dot_report_up == 150 ){
-			TPD_ERR("Up[%4d %4d %4d]\n", x, y, p);
-			Dot_report_up = 0;
-		}else{
-			Dot_report_up++;
-		}
 #ifndef TYPE_B_PROTOCOL
         input_mt_sync(ts->input_dev);
 #endif
@@ -2007,10 +1991,10 @@ static irqreturn_t synaptics_ts_irq_handler(int irq, void *data)
 			key_press_all_the_time = 0;
 			int_touch_s3508(ts,insert_point);
 		}
+	} else if (inte & 0x10) {
+		int_key_report_s3508(ts);
 	}
 
-	if (inte & 0x10)
-		int_key_report_s3508(ts);
 up_semaphore:
 	up(&work_sem);
 
